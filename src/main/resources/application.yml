@@ -1,0 +1,25 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /monitor
+    session:
+      timeout: 28000
+      tracking-modes:
+      - COOKIE
+  tomcat:
+    basedir:
+      /var/lib/dgb/${spring.application.name}/tomcat
+
+spring:
+  application:
+    name: dgb-epaper
+  servlet:
+    multipart:
+      max-file-size: 100000000
+      max-request-size: 100000000
+  messages:
+      basename: i18n/messages,i18n/ValidationMessages
+  elasticsearch:
+    uris: http://10.80.0.60:9200
+    username: elastic
+    password: 123456
