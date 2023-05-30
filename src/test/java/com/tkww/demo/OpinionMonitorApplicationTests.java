@@ -43,8 +43,11 @@ class OpinionMonitorApplicationTests {
     @Test
     void repositoryAddOne() throws IOException {
         User user = new User();
-        user.setName("李四");
-        user.setContent("这是李四的介绍，李四未指定id，有es默认生成");
+        user.setId("66");
+        user.setName("康有为");
+        user.setLoginName("kyw");
+        user.setContent("康有为和梁启超");
+        user.setPasswd("123");
         User save = userRepository.save(user);
         
     }

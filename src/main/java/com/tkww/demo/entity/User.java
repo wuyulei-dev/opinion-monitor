@@ -14,16 +14,25 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-@Document(indexName = "userindex",createIndex = true)
+@Document(indexName = "userindex", createIndex = true)
 public class User {
     @Id
     private String id;
-    
-    @Field(type=FieldType.Keyword)
+
+    @Field(type = FieldType.Keyword)
     private String name;
-    
-    @Field(type=FieldType.Text,analyzer = "ik_max_word",searchAnalyzer = "ik_max_word")
+
+    @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_max_word")
     private String content;
+
+    /**
+     * 密码
+     */
+    @Field(type = FieldType.Keyword)
+    private String passwd;
+
+    @Field(type = FieldType.Keyword)
+    private String LoginName;
 
     public String getId() {
         return id;
@@ -52,6 +61,24 @@ public class User {
         this.content = content;
     }
 
+    public String getPasswd() {
+        return passwd;
+    }
+
+    public void setPasswd(
+        String passwd) {
+        this.passwd = passwd;
+    }
+
+    public String getLoginName() {
+        return LoginName;
+    }
+
+    public void setLoginName(
+        String loginName) {
+        LoginName = loginName;
+    }
+
     @Override
     public String toString() {
         return "User [id=" + id + ", name=" + name + ", content=" + content + ", getId()=" + getId() + ", getName()="
@@ -59,5 +86,4 @@ public class User {
                 + hashCode() + ", toString()=" + super.toString() + "]";
     }
 
-    
 }
