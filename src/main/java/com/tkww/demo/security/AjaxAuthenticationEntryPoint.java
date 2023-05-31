@@ -23,7 +23,7 @@ import com.tkww.demo.dataset.Result;
 import cn.hutool.http.HttpStatus;
 
 /**
- * 未登录异常处理
+ * 未登录、登录失败异常处理
  * 
  * @author wwp-pc
  */

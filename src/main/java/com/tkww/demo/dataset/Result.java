@@ -42,6 +42,7 @@ public class Result implements Serializable {
     protected long totalRow = -1;
 
     private Object jsonData;
+    
 
     public static Result ok() {
         Result result = new Result();

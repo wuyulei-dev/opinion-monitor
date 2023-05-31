@@ -23,3 +23,6 @@ spring:
     uris: http://10.80.0.60:9200
     username: elastic
     password: 123456
+    
+jwt:
+    secrety-key: tkww_monitor_secret_46321

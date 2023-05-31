@@ -22,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.tkww.demo.filter.AjaxAuthenticationFilter;
+import com.tkww.demo.filter.TokenFilter;
 import com.tkww.demo.security.AjaxAuthenticationEntryPoint;
 import com.tkww.demo.service.UserService;
 
@@ -29,32 +30,31 @@ import com.tkww.demo.service.UserService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    
+
     /**
      * 不需要权限过滤资源定义
      */
-    public static final String[] IGNORING_RESOURCES = {
-             "/static/**" //静态资源
+    public static final String[] IGNORING_RESOURCES = { "/static/**" //静态资源
     };
-    
+
     @Autowired
     private AjaxAuthenticationEntryPoint ajaxAuthenticationEntryPoint;
-    
-    
+
+    @Autowired
+    private UserService userService;
+
     //其他地方要使用时 定义
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-    
+
     //编码器
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    
 
     @Override
     public void configure(
@@ -62,37 +62,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //静态资源配置，不经secrity过滤器，不被拦截
         web.ignoring().antMatchers("/js/**");
     }
-    
-   
 
     @Override
     protected void configure(
         HttpSecurity http) throws Exception {
-        
+
         //前后端分离
-        http.authorizeRequests()    //开始权限配置
-                  .antMatchers("/doLogin").permitAll() //单点登录接口放行（所匹配的URL 任何人都允许访问）
-                  .anyRequest().authenticated()  //除以上配置,其他所有访问都需要认证，都需登录后才能访问
-                  .and()
-                  //不通过session获取SecurityContext
-             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-             .and()
-             .csrf().disable();
-        
-        
-        http.exceptionHandling()
-            .authenticationEntryPoint(ajaxAuthenticationEntryPoint);
-        
+        http.authorizeRequests() //开始权限配置
+                .antMatchers("/doLogin").permitAll() //单点登录接口放行（所匹配的URL 任何人都允许访问）
+                .anyRequest().authenticated() //除以上配置,其他所有访问都需要认证，都需登录后才能访问
+                .and()
+                //不通过session获取SecurityContext
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable();
+
+        http.exceptionHandling().authenticationEntryPoint(ajaxAuthenticationEntryPoint);
+
         //ajax Filter加入过滤器链
         http.addFilterBefore(ajaxAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(tokenFilter(), AjaxAuthenticationFilter.class);
     }
-    
+
     @Bean
     public AjaxAuthenticationFilter ajaxAuthenticationFilter() {
         AjaxAuthenticationFilter ajaxAuthenticationFilter = new AjaxAuthenticationFilter();
-        //设置用户无权限处理
-        //登录成功处理
-        //登录失败处理
         return ajaxAuthenticationFilter;
+    }
+
+    @Bean
+    public TokenFilter tokenFilter() {
+        TokenFilter tokenFilter = new TokenFilter(userService);
+        return tokenFilter;
     }
 }
