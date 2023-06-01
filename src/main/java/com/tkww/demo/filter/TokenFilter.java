@@ -74,7 +74,7 @@ public class TokenFilter extends OncePerRequestFilter {
 
         //获取用户信息
         String userId = (String) claims.get("userId");
-        User currentUser = userService.repositoryGetOne();
+        User currentUser = userService.getUserById(userId);
         if (ObjectUtil.isEmpty(currentUser)) {
             //解析失败,抛出异常
             ObjectMapper objectMapper = new ObjectMapper();

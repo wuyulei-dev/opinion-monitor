@@ -31,10 +31,10 @@ public class AjaxUserDetailService implements UserDetailsService{
     
     @Override
     public UserDetails loadUserByUsername(
-        String LoginName) throws UsernameNotFoundException {
+        String loginName) throws UsernameNotFoundException {
         User user;
         try {
-            user = userService.repositoryGetOne();
+            user = userService.getUserByName(loginName);
         }
         catch (IOException e) {
             throw new RuntimeException("用户名或密码错误");

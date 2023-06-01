@@ -9,8 +9,12 @@
  */
 package com.tkww.demo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.tkww.demo.dataset.Result;
+import com.tkww.demo.service.TwitterService;
 
 /**
  * 书架相关API
@@ -22,30 +26,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class MonitorApiController {
     
+    @Autowired
+    private TwitterService twitterService;
+    
     /**
-     * PDF_JPG上传到oss
+     * excel上传到es
      * 
      * @param bookId 刊物ID
      * @param publishDate 发行日期。格式：20200601
      * @return
      */
-//    @RequestMapping("/uploadExcel")
-//    @BSLog(value = "PDF_JPG上传到oss", storeDb = true)
-//    public Result epaperUpload(
-//        @RequestParam(name = "bookId", required = true) String Excel) {
-//        try {
-//            Result uploadR = Result.ok();
-//            if (StringUtils.equalsIgnoreCase(bookId, EPapaerConstant.BOOK_TYPE_WWP)) {
-//                uploadR = fileUploadService
-//                        .epaperUploadByWWP(bookId, publishDate, EPapaerConstant.EPAPER__FORCE_UPDATE_YES);
-//            }
-//          
-//            return uploadR;
-//        }
-//        catch (Exception e) {
-//            return Result.error().message(e.toString());
-//        }
-//    }
+    @RequestMapping("/uploadExcel")
+    public Result uploadExcel(
+        @RequestParam(name = "sheet", required = true) String sheet) {
+        try {
+            twitterService.uploadTwitterData("E:\\1231684804635.xlsx", sheet);
+        }
+        catch (Exception e) {
+           return Result.error();
+        }
+        return Result.ok();
+    }
     
     
   @RequestMapping("/aa")

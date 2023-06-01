@@ -13,17 +13,25 @@ import java.io.IOException;
 import java.util.Optional;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.tkww.demo.dao.UserRepository;
 import com.tkww.demo.entity.User;
+import cn.hutool.json.JSONUtil;
 
 @Service
 public class UserService {
 
+    private final String INDEX="userindex";
     @Autowired
     private RestHighLevelClient client;
     
@@ -52,12 +60,28 @@ public class UserService {
         
     }
     
-    //Repository 查询一个
-    public User repositoryGetOne() throws IOException {
-       Optional<User> optional = userRepository.findById("66");
-       System.out.println(optional.get());
+    //根据loginName获取用户
+    public User getUserByName(String loginName) throws IOException {
+      User user = null; 
+      SearchRequest searchRequest = new SearchRequest(INDEX);
+      searchRequest.types("_doc");
+      SearchSourceBuilder sourceBuilder=new SearchSourceBuilder();
+      TermQueryBuilder termQuery = QueryBuilders.termQuery("loginName", loginName);
+      sourceBuilder.query(termQuery);
+      searchRequest.source(sourceBuilder);
+      SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
+      SearchHit[] hits = response.getHits().getHits();
+      for (SearchHit hit : hits) {
+          user = JSONUtil.toBean(hit.getSourceAsString(), User.class);
+      }
         
-       return optional.get();
+      return user;
+    }
+    
+  //根据uerId 获取用户信息
+    public User getUserById(String userId) throws IOException {
+        Optional<User> optional = userRepository.findById(userId);
+        return optional.get();
     }
     
     //Repository 查询所有

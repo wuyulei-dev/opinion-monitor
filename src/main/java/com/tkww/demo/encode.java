@@ -9,6 +9,9 @@
  */
 package com.tkww.demo;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class encode {
@@ -17,5 +20,15 @@ public class encode {
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
             String encode = bCryptPasswordEncoder.encode("123456");
             System.out.println(encode);
+            
+            
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                Date date = simpleDateFormat.parse("2023-05-22 17:23:59");
+                System.out.println(date);
+            }
+            catch (ParseException e) {
+               
+            }
         }
 }

@@ -34,8 +34,10 @@ public class GlobalExceptionHandler {
 
     //采用注解权限会被全局异常先捕获
     @ExceptionHandler(value = AccessDeniedException.class)
-    public void accessDeniedException(
+    public Result accessDeniedException(
         AccessDeniedException accessDeniedException) {
-        throw accessDeniedException;
+        Result error = Result.error();
+        error.setMessage("无权限访问！" + accessDeniedException.toString());
+        return error;
     }
 }

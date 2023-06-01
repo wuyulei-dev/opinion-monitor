@@ -70,6 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //前后端分离
         http.authorizeRequests() //开始权限配置
                 .antMatchers("/doLogin").permitAll() //单点登录接口放行（所匹配的URL 任何人都允许访问）
+                .antMatchers("/api/*").permitAll()
                 .anyRequest().authenticated() //除以上配置,其他所有访问都需要认证，都需登录后才能访问
                 .and()
                 //不通过session获取SecurityContext

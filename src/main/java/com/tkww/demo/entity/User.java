@@ -32,7 +32,7 @@ public class User {
     private String passwd;
 
     @Field(type = FieldType.Keyword)
-    private String LoginName;
+    private String loginName;
 
     public String getId() {
         return id;
@@ -70,13 +70,14 @@ public class User {
         this.passwd = passwd;
     }
 
+
     public String getLoginName() {
-        return LoginName;
+        return loginName;
     }
 
     public void setLoginName(
         String loginName) {
-        LoginName = loginName;
+        this.loginName = loginName;
     }
 
     @Override
